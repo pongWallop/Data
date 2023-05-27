@@ -1,0 +1,68 @@
+play_game <- function(){
+ 
+   #gamename 
+  print("Pao_Ying_Chub_Games")
+  #rules
+  print("Choose 'H'= Hammer, 'P'= Paper, 'S'= Scissors ")
+  print("type 'exit' to exit game")
+  
+  #score variable
+  tie <- 0
+  win <- 0
+  lose <- 0
+  
+
+  #variable Vector 
+  option <- c("H","P","S")
+  
+  while(TRUE){
+    print("Let's sart")
+    player =  readline("what do you choose: ")
+    computer_select <- sample(option,1)
+    
+    
+    
+    
+    if (player == computer_select){
+      print(paste("You choose",player))
+      print(paste("Computer choose",computer_select))
+      tie <- tie+1
+      print("Tie")
+    }
+    
+    else if ((player == "H" & computer_select == "S")
+             | (player == "S" & computer_select == "P") | (player == "P" & computer_select == "H")){
+      print(paste("You choose",player))
+      print(paste("Computer choose",computer_select))
+      win <- win+1
+      print("You Win")
+    }
+    
+    else if ((player == "H" & computer_select == "H")
+             | (player == "S" & computer_select == "H")
+             | (player == "P" & computer_select == "S")){
+      print(paste("You choose",player))
+      print(paste("Computer choose",computer_select))
+      lose <- lose+1
+      print("You Lose")
+    }
+    else if (player == "exit"){  # Want to Exit          #Check Out loop  # report exit
+     
+      total <- win+lose+tie
+      print(paste("Total Games : ", total))
+      print(paste("Win   : ", win))
+      print(paste("Lose  : ", lose))
+      print(paste("Tie   : ", tie))
+      break   
+      
+
+     
+      
+      
+      } else {
+      print("Please typing Capital agian - 'H' 'P' 'S'") #Again  
+    }
+  }
+}
+
+play_game()
