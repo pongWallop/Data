@@ -1,0 +1,56 @@
+library(caret) 
+library(tidyverse) 
+library(mlbench) 
+library(rpart) 
+library(randomForest) 
+library(class)
+
+library(caret)
+library(tidyverse)
+library(mlbench) ## Data set many
+library(MLmetrics)
+
+
+# View Data
+data()
+
+data("BostonHousing")
+df <-  BostonHousing
+glimpse(df)
+tibble(df)
+# Clustering ML (segmentation)
+
+subset_df <- df %>%
+  select(crim, rm, age, lstat, medv) %>%  #อาชญากรรม จำนวนห้อง อายุ
+  as_tibble() #ดูแค่ preview ไม่ทั้งหมด
+
+# test different K 2-5 group
+kmeans(x = subset_df, centers = 2) #center = k จำนวน Segments
+
+resoult2 <- kmeans(x=subset_df, centers = 2)
+(resoult3 <- kmeans(x=subset_df, centers = 3))
+resoult4 <- kmeans(x=subset_df, centers = 4)
+resoult5 <- kmeans(x=subset_df, centers = 5)
+
+#จะได้ผลลัพธ์ เรียกว่า Profile
+
+
+# membership [123]
+subset_df$cluster <- resoult3$cluster  # ตั้งชื่อใหม่ เข้าไปในตารางหลังเลย
+
+####p4 = ggplot(subset_df, mapping=aes(age, rm     ,col=cluster)) +
+ # geom_point(size=5, alpha=0.7) +
+#  theme_minimal() +
+ # scale_color_gradient(low="gold", high="purple")
+
+
+subset_df %>%
+  summarise(avg_medv = mean(medv))
+
+subset_df %>%
+  group_by(cluster) %>%
+  summarise(avg_medv = mean(medv))
+
+view(subset_df)
+
+write.csv(subset_df, "subset_df.csv", row.names = FALSE )
