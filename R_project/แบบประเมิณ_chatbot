@@ -1,0 +1,33 @@
+admin <- function() {
+  
+  print("Instruction: type 'exit' to exit the program")
+  print("Welcome to Data Science Bootcamp 7")
+  print("โปรดให้คะแนนความพึงพอใจของคุณระหว่าง 1-5 คะแนน")
+  
+  while (TRUE) {
+    text = readline("What's your name: ")
+    if (text == "exit") {
+      print("Thank you for your points.")
+      break
+    } else {
+      print(paste("Hello!", text))
+      like = readline("คุณชอบ Data Science Bootcamp 7?: ")
+      
+      q1 = readline("คุณมีความพึงพอใจในหลักสูตรมากแค่ไหน: ")
+      print(paste("คุณให้คะแนสำหรับในหลักสูตร",q1))
+      
+      q2 = readline("คุณชอบโบนัสคลาสมากขนาดไหน: ")
+      print(paste("คุณให้คะแนนความชอบโบนัสคลาส",q2))
+      
+      q3 = readline("คุณชอบการเรียนแบบไลฟ์มากขนาดไหน: ")
+      print(paste("คุณให้คะแนนสำหรับการเรียนแบบไลฟ์",q3))
+      
+      q4 = readline("โปรดให้คะแนนตัวเองสำหรับการเรียน: ")
+      print(paste("คุณให้คะแนตัวเอง",q4))
+      
+      print("Thank you for your points.")
+     
+    }
+  }
+}
+  admin()
