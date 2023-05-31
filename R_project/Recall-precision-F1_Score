@@ -1,0 +1,44 @@
+ # Recall
+ # precision
+ # F1
+ # AUC  (are under the curve)
+  
+  
+  
+data("PimaIndiansDiabetes")
+glimpse(PimaIndiansDiabetes)
+
+dfpima <- PimaIndiansDiabetes
+
+
+dfpima$diabetes <- fct_relevel(dfpima$diabetes, "pos") # Focus pos 
+
+subset_dfPima <-  dfpima %>%
+  select(glucose, insulin, age, diabetes) 
+  
+  set.seed(42)
+
+n <- nrow(subset_dfPima)
+id <- sample(1:n, size = 0.8*n)
+train_dataPimna <- subset_dfPima[id, ]
+test_dataPima <- subset_dfPima[-id, ]
+  ##2 train data
+set.seed(42)
+ctrl <-  trainControl( method = "cv",
+                       number = 5,
+                       verboseIter = TRUE,
+                       summaryFunction = prSummary,
+                       classProbs = T)
+
+(knn_model <- train(diabetes  ~ .,
+                    data = train_dataPimna,
+                    method = "knn",
+                    metric = "Recall", 
+                    trControl = ctrl))
+
+p <-  predict(knn_model, newdata = test_dataPima)
+
+  
+confusionMatrix(p,test_dataPima$diabetes, positive = "pos", 
+                mode = "prec_recall")
+
