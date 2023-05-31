@@ -1,0 +1,95 @@
+  data("BostonHousing")
+  
+  ##lm, knn
+
+df <-  as_tibble(df)
+glimpse(df)
+# 1 split data
+
+
+set.seed(42)
+n <- nrow(df)
+id <- sample(1:n, size = 0.8*n)
+train_data <- df[id, ]
+test_data <- df[-id, ]
+
+train_data
+test_data
+
+
+
+# 2 train 
+
+glimpse(train_data)
+
+set.seed(42)
+knn_model <-  train(medv ~ crim + rm + age,
+                    data = train_data,
+                    method = "knn",
+                    metric = "Rsquared", ##เลือก metric Rsquared   
+                    preProcess = c("center", "scale")) #SD  หา Z ก่อน##
+set.seed(42)
+lm_model <-  train(medv ~ crim + rm + age,
+                    data = train_data,
+                    method = "lm",
+                    preProcess = c("center", "scale")) #SD Z ก่อน)
+
+lm_model$finalModel
+
+
+# standardization 
+#center and scale คือการหารด้วยตัวมันเอง 
+
+
+# 3 score
+p <- predict(knn_model, newdata = test_data)
+
+#4 evaluate
+
+RMSE(p, test_data$medv)
+
+
+
+ # tune model 
+set.seed(42)
+
+ctrl <-  trainControl( method = "cv",
+                       number = 5,
+                       verboseIter = T)
+
+ #**** grid search tune hyper parameters
+ 
+ k_grid <- data.frame(k=c(3,5,7,9,11)) #กำหนดค่า K
+
+knn_model <-  train(medv ~ crim + rm + age,  
+                    data = train_data,
+                    method = "knn",
+                    metric = "Rsquared", 
+                    tuneGrid = k_grid,
+                    preProcess = c("center", "scale"),
+                    trControl = ctrl)
+
+RMSE(p, test_data$medv)
+# 3 score 
+p <- predict(knn_model, newdata = test_data)
+
+
+  
+    # Tune Length Random search
+  # Random Search in Caret  ตามค่า K สักค่า ทั้งหมดกี่ค่า ตรงนี้เอา  
+  # tune Grid = k_grid, ใส่ tuneLength = 2,
+
+
+   ctrl <-  trainControl( method = "cv",
+                         number = 5,
+                         verboseIter = T)
+ 
+  knn_model <-  train(medv ~ crim + rm + age,
+                      data = train_data,
+                      method = "knn",
+                      metric = "Rsquared", 
+                      tuneLength = 2,
+                      preProcess = c("center", "scale"), #ควรจะใส่ทุกครั้ง
+                      trControl = ctrl)
+
+RMSE(p, test_data$medv)
