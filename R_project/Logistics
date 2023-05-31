@@ -1,0 +1,13 @@
+
+## Logistics 
+set.seed(42)
+ctrl <-  trainControl( method = "cv",
+                       number = 5,
+                       verboseIter = TRUE)
+
+(logit_model <- train(diabetes  ~ .,
+                    data = train_dataPimna,
+                    method = "glm",
+                    metric = "Accuracy", 
+                    trControl = ctrl))
+
