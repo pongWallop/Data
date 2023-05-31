@@ -1,0 +1,31 @@
+ # classification problem
+  data("PimaIndiansDiabetes")
+glimpse(PimaIndiansDiabetes)
+
+dfpima <- PimaIndiansDiabetes
+
+subset_dfPima <-  dfpima %>%
+  select(glucose, insulin, age, diabetes)
+
+# 1. split data 
+
+set.seed(42)
+n <- nrow(dfpima)
+id <- sample(1:n, size = 0.8*n)
+train_dataPimna <- subset_dfPima[id, ]
+test_dataPima <- subset_dfPima[-id, ]
+
+##2 train data  
+
+## Accuracy
+
+set.seed(42)
+ctrl <-  trainControl( method = "cv",
+                       number = 5,
+                       verboseIter = TRUE)
+
+(knn_model <- train(diabetes  ~ .,
+                    data = train_dataPimna,
+                    method = "knn",
+                    trControl = ctrl))
+
