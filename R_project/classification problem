@@ -29,3 +29,42 @@ ctrl <-  trainControl( method = "cv",
                     method = "knn",
                     trControl = ctrl))
 
+
+# Advance *************************** classification
+
+
+set.seed(42)
+
+ctrl <-  trainControl( method = "cv",
+                       number = 5,
+                       verboseIter = TRUE,
+                       summaryFunction = twoClassSummary,
+                       classProbs = T)
+
+(knn_model <- train(diabetes  ~ .,
+                   data = train_dataPimna,
+                   method = "knn",
+                   metric = "Sens", #recall สามารถเปลี่ยนได้ 
+                   trControl = ctrl))
+
+
+# score 
+
+p <-  predict(knn_model, newdata = test_dataPima)
+
+# evaluate 2 วิธี +- 5% ต้องเลือก 'Positive' Class : pos ที่เราสนใจ 
+
+# Sensitivity คือ recall 
+# 
+
+
+#คิดมือ
+
+table(test_dataPima$diabetes, p, dnn = c("actual",
+                                         "preiction"))
+(76+32)/ nrow(test_dataPima)
+
+
+## function 
+confusionMatrix(p,test_dataPima$diabetes, positive = "pos")
+
