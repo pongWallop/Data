@@ -1,0 +1,45 @@
+# decision Tree  (r part)
+
+(rpart_model <- train(diabetes  ~ .,
+                    data = train_dataPimna,
+                    method = "rpart",
+                    metric = "Accuracy", 
+                    trControl = ctrl))
+
+library(rpart.plot)
+rpart.plot(rpart_model$finalModel)
+
+
+# ----------------------------------------
+#  model Random Forrest 
+dfpima <- PimaIndiansDiabetes
+
+
+dfpima$diabetes <- fct_relevel(dfpima$diabetes, "pos") # Focus pos 
+
+
+set.seed(42)
+
+n <- nrow(dfpima)
+id <- sample(1:n, size = 0.8*n)
+train_dataPimna <- dfpima[id, ]
+test_dataPima <- dfpima[-id, ]
+
+
+mtry_grid <-  data.frame(mtry = 2:8)
+
+(rf_model <- train(diabetes  ~ .,
+                      data = train_dataPimna,
+                      method = "rf",
+                      metric = "Accuracy",
+                      tuneGrid = mtry_grid,
+                      trControl = ctrl))
+
+## compare model
+
+listModel <-  list(knn = knn_model,
+                   logis = logit_model,
+                   random = rf_model,
+                   desision = rpart_model)
+results <- resamples(listModel)
+summary(results)
